@@ -16,20 +16,50 @@ namespace apisHotel.Controller
     {
         private readonly UserManager<Cliente> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthController(
             UserManager<Cliente> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _roleManager = roleManager;
         }
 
-        [HttpPost("registrar")]
-        public async Task<IActionResult> Registrar([FromBody] RegistroModel model)
+        [HttpGet("Roles")]
+        public async Task<IActionResult> Roles()
+        {
+            var roles = _roleManager.Roles.ToList();
+
+            if (roles.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(roles);
+        }
+
+        [HttpPost("RegistrarCliente")]
+        public async Task<IActionResult> RegistrarCliente([FromBody] RegistroModel model)
         {
             if (!ModelState.IsValid)
             {
+                return BadRequest(ModelState);
+            }
+
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
+            {
+                ModelState.AddModelError("Email", $"El correo '{model.Email}' ya se encuentra registrado.");
+                return BadRequest(ModelState);
+            }
+
+            var roleExists = await _roleManager.RoleExistsAsync(model.Rol);
+
+            if (!roleExists)
+            {
+                ModelState.AddModelError("Rol", $"El rol '{model.Rol}' no existe.");
                 return BadRequest(ModelState);
             }
 
@@ -40,39 +70,48 @@ namespace apisHotel.Controller
                 FechaNacimiento = model.FechaNacimiento,
                 NumeroDocumento = model.NumeroDocumento,
                 Email = model.Email,
-                TelefonoContacto = model.TelefonoContacto
+                TelefonoContacto = model.TelefonoContacto,
+                UserName = model.Usuario,
+                Genero = model.Genero,
+                TipoDocumento = model.TipoDocumento,
             };
 
             var result = await _userManager.CreateAsync(cliente, model.Contrasena);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
+                // Si hay errores en la creación del usuario, devolver los errores
+                return BadRequest(new { Errors = result.Errors });
+
+            try
             {
-                // Asignar el rol al nuevo cliente
                 await _userManager.AddToRoleAsync(cliente, model.Rol);
-                var token = GenerateJwtToken(cliente);
-                // Puedes devolver una respuesta de éxito o cualquier otra información necesaria
-                return Ok(new { Message = "Usuario registrado exitosamente.", Token = token });
+            }
+            catch (Exception ex)
+            {
+                await _userManager.DeleteAsync(cliente);
+                return BadRequest(new { Errors = ex.Message });
             }
 
-            // Si hay errores en la creación del usuario, devolver los errores
-            return BadRequest(new { Errors = result.Errors });
+            //Generamos el token y lo devolvemos en la respuesta.
+            var token = GenerateJwtToken(cliente);
+            return Ok(new { Message = "Usuario registrado exitosamente.", Token = $"Bearer {token}" });
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        [HttpPost("ObtenerToken")]
+        public async Task<IActionResult> ObtenerToken([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cliente = await _userManager.FindByNameAsync(model.UserName);
+            var cliente = await _userManager.FindByNameAsync(model.Usuario);
 
             if (cliente != null && await _userManager.CheckPasswordAsync(cliente, model.Contrasena))
             {
                 var token = GenerateJwtToken(cliente);
 
-                return Ok(new{Token = token});
+                return Ok(new { Token = $"Bearer {token}" });
             }
 
             return Unauthorized(new { Mensaje = "Acceso no autorizado." });

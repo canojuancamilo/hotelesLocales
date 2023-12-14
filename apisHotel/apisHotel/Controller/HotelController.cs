@@ -1,5 +1,7 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
+using apisHotel.Models.Api;
+using apisHotel.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +22,31 @@ namespace apisHotel.Controller
             this.userManager = userManager;
         }
 
+        [HttpPost]
+        public async Task <IActionResult> CrearHotel([FromBody] HotelModel model)
+        {
+            var Rol = await obtenerRol();
+
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
+            Hotel hotel = new Hotel()
+            {
+                Nombre = model.Nombre,
+                Habilitado = model.Habilitado
+            };
+
+            _hotelService.CreateHotel(hotel);
+            return CreatedAtAction(nameof(GetHotelById), new { id = hotel.Id }, hotel);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllHoteles()
         {
-            var nombreCliente = User.Identity.Name;
-            var cliente = await userManager.FindByNameAsync(nombreCliente);
-            var rolesUsuario = await userManager.GetRolesAsync(cliente);
-            var primerRol = rolesUsuario.FirstOrDefault();
+            var Rol = await obtenerRol();
+
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
             var hoteles = _hotelService.GetAllHoteles();
             return Ok(hoteles);
@@ -43,13 +63,6 @@ namespace apisHotel.Controller
             return Ok(hotel);
         }
 
-        [HttpPost]
-        public IActionResult CreateHotel([FromBody] Hotel hotel)
-        {
-            _hotelService.CreateHotel(hotel);
-            return CreatedAtAction(nameof(GetHotelById), new { id = hotel.Id }, hotel);
-        }
-
         [HttpPut("{id}")]
         public IActionResult UpdateHotel(int id, [FromBody] Hotel hotel)
         {
@@ -63,6 +76,16 @@ namespace apisHotel.Controller
             _hotelService.UpdateHotel(hotel);
 
             return NoContent();
+        }
+
+        private async Task<string> obtenerRol()
+        {
+            var UsuarioCliente = User.Identity.Name;
+            var cliente = await userManager.FindByNameAsync(UsuarioCliente);
+            var rolesUsuario = await userManager.GetRolesAsync(cliente);
+            var Rol = rolesUsuario.FirstOrDefault();
+
+            return Rol;
         }
     }
 }

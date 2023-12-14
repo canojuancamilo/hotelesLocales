@@ -2,12 +2,12 @@
 
 namespace apisHotel.Models.Api
 {
-    public class LoginModel
+    public class HotelModel
     {
         [Required(ErrorMessage = "Campo obligatorio")]
-        public string Usuario { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "Campo obligatorio")]
-        public string Contrasena { get; set; }
+        public bool Habilitado { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace apisHotel
 {
-    public class ApplicationDbContext : IdentityDbContext<Cliente, IdentityRole, string>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
