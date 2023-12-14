@@ -9,7 +9,7 @@
         public DateTime FechaEntrada { get; set; }
         public DateTime FechaSalida { get; set; }
         public int CantidadPersonas { get; set; }
-        public List<Huesped> Huespedes { get; set; }
+        public List<Cliente> Cliente { get; set; }
         public ContactoEmergencia ContactoEmergencia { get; set; }
     }
 }
