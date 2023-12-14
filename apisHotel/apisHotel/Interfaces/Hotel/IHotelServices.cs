@@ -4,9 +4,11 @@ namespace apisHotel.Interfaces
 {
     public interface IHotelService
     {
-        IEnumerable<Hotel> GetAllHoteles();
-        Hotel GetHotelById(int id);
-        void CreateHotel(Hotel hotel);
-        void UpdateHotel(Hotel hotel);
+        IEnumerable<Hotel> ObtenerHoteles();
+        Hotel ObtenerDetalleHotel(int id);
+        void AgregarHotel(Hotel hotel);
+        void ActualizarHotel(Hotel hotel);
+        void AgregarHabitacionHotel(int HotelId, Habitacion hotel);
+        Habitacion ObtenerDetalleHabitacion(int id);
     }
 }

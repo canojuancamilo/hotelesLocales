@@ -23,8 +23,11 @@ namespace apisHotel.Controller
         }
 
         [HttpPost]
-        public async Task <IActionResult> CrearHotel([FromBody] HotelModel model)
+        public async Task<IActionResult> Post([FromBody] HotelModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var Rol = await obtenerRol();
 
             if (Rol != "Agente")
@@ -36,44 +39,91 @@ namespace apisHotel.Controller
                 Habilitado = model.Habilitado
             };
 
-            _hotelService.CreateHotel(hotel);
-            return CreatedAtAction(nameof(GetHotelById), new { id = hotel.Id }, hotel);
+            _hotelService.AgregarHotel(hotel);
+            return CreatedAtAction(nameof(GetDetalle), new { id = hotel.Id }, hotel);
+        }
+
+        [HttpPost("Habiticion")]
+        public async Task<IActionResult> Post([FromBody] HabitacionModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var Rol = await obtenerRol();
+
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
+            bool hotelExiste = _hotelService.ObtenerDetalleHotel(model.HotelId) != null;
+
+            if (!hotelExiste)
+            {
+                ModelState.AddModelError("HotelId", $"El hotel '{model.HotelId}' no existe.");
+                return BadRequest(ModelState);
+            }
+
+            Habitacion habitacion = new Habitacion()
+            {
+                Tipo = model.Tipo,
+                CostoBase = model.CostoBase,
+                Impuestos = model.Impuestos,
+                Ubicacion = model.Ubicacion,
+                Habilitada = model.Habilitada
+            };
+
+            _hotelService.AgregarHabitacionHotel(model.HotelId, habitacion);
+            return CreatedAtAction(nameof(GetDetalleHabitacion), new { id = habitacion.Id }, habitacion);
+        }
+
+        [HttpGet("Habitacion/{id}")]
+        public IActionResult GetDetalleHabitacion(int id)
+        {
+            var habitacion = _hotelService.ObtenerDetalleHabitacion(id);
+
+            if (habitacion == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(habitacion);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllHoteles()
+        public async Task<IActionResult> Get()
         {
             var Rol = await obtenerRol();
 
             if (Rol != "Agente")
                 return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
-            var hoteles = _hotelService.GetAllHoteles();
+            var hoteles = _hotelService.ObtenerHoteles();
             return Ok(hoteles);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetHotelById(int id)
+        public IActionResult GetDetalle(int id)
         {
-            var hotel = _hotelService.GetHotelById(id);
+            var hotel = _hotelService.ObtenerDetalleHotel(id);
+
             if (hotel == null)
             {
                 return NotFound();
             }
+
             return Ok(hotel);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateHotel(int id, [FromBody] Hotel hotel)
+        public IActionResult Put(int id, [FromBody] Hotel hotel)
         {
-            var existingHotel = _hotelService.GetHotelById(id);
+            var existingHotel = _hotelService.ObtenerDetalleHotel(id);
 
             if (existingHotel == null)
             {
                 return NotFound();
             }
 
-            _hotelService.UpdateHotel(hotel);
+            _hotelService.ActualizarHotel(hotel);
 
             return NoContent();
         }

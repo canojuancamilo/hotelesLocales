@@ -45,9 +45,7 @@ namespace apisHotel.Controller
         public async Task<IActionResult> RegistrarCliente([FromBody] RegistroModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
@@ -101,9 +99,7 @@ namespace apisHotel.Controller
         public async Task<IActionResult> ObtenerToken([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var cliente = await _userManager.FindByNameAsync(model.Usuario);
 

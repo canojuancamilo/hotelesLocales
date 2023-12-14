@@ -12,24 +12,34 @@ namespace apisHotel.Services
             _hotelRepository = hotelRepository;
         }
 
-        public IEnumerable<Hotel> GetAllHoteles()
+        public IEnumerable<Hotel> ObtenerHoteles()
         {
-            return _hotelRepository.GetAll();
+            return _hotelRepository.ObtenerHoteles();
         }
 
-        public Hotel GetHotelById(int id)
+        public Hotel ObtenerDetalleHotel(int id)
         {
-            return _hotelRepository.GetById(id);
+            return _hotelRepository.ObtenerDetalleHotel(id);
         }
 
-        public void CreateHotel(Hotel hotel)
+        public void AgregarHotel(Hotel hotel)
         {
-            _hotelRepository.Add(hotel);
+            _hotelRepository.AgregarHotel(hotel);
         }
 
-        public void UpdateHotel(Hotel hotel)
+        public void ActualizarHotel(Hotel hotel)
         {
-            _hotelRepository.Update(hotel);
+            _hotelRepository.ActualizarHotel(hotel);
+        }
+
+        public void AgregarHabitacionHotel(int HotelId, Habitacion habitacion)
+        {
+            _hotelRepository.AgregarHabitacionHotel(HotelId, habitacion);
+        }
+
+        public Habitacion ObtenerDetalleHabitacion(int id)
+        {
+            return _hotelRepository.ObtenerDetalleHabitacion(id);
         }
     }
 }
