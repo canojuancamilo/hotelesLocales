@@ -17,6 +17,7 @@ namespace apisHotel
         public DbSet<Reserva> Reservas { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<ContactoEmergencia> ContactosEmergencia { get; set; }
+        public DbSet<Huesped> Huesped { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

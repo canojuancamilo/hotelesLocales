@@ -6,6 +6,7 @@ using apisHotel.Utilidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace apisHotel.Controller
 {
@@ -116,17 +117,27 @@ namespace apisHotel.Controller
             return Ok(new { Message = "Hotel modificado exitosamente.", Hotel = hotel });
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult Get(int id)
-        //{
-        //    var hotel = _hotelService.ObtenerDetalleHotel(id);
+        [HttpGet("Disponibles/{FechaEntrada}/{FechaSalida}/{CantidadPersonas}/{Ciudad}")]
+        public async Task<IActionResult> ObenerHotelesDisponibles(string FechaEntrada, string FechaSalida, int CantidadPersonas, string Ciudad)
+        {
+            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
 
-        //    if (hotel == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
-        //    return Ok(hotel);
-        //}
+            DateTime fechaEntrada;
+            DateTime fechaSalida;
+
+            if (!(DateTime.TryParseExact(FechaEntrada, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaEntrada)) 
+                || !(DateTime.TryParseExact(FechaSalida, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaSalida)))
+                return BadRequest("Formato de fecha de entrada no válido. Utiliza el formato dd-MM-yyyy.");
+
+            var hoteles = _hotelService.ObtenerHotelesDisponibles(fechaEntrada, fechaSalida, CantidadPersonas, Ciudad);
+
+            if (hoteles == null)
+                return NotFound(new { Message = "No se encontraron hoteles disponibles." });
+
+            return Ok(hoteles);
+        }
     }
 }

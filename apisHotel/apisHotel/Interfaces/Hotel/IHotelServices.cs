@@ -9,5 +9,6 @@ namespace apisHotel.Interfaces
         void AgregarHotel(Hotel hotel);
         void ActualizarHotel(Hotel hotel);
         void ActualizarEstadoHotel(int id, bool estado);
+        IEnumerable<Hotel> ObtenerHotelesDisponibles(DateTime fechaEntrada, DateTime fechaSalida, int cantidaPersonas, string ciudad);
     }
 }

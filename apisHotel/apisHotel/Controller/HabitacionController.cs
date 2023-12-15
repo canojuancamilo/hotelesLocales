@@ -63,14 +63,17 @@ namespace apisHotel.Controller
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
+            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
             var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
 
             if (habitacion == null)
-            {
                 return NotFound(new { Message = $"La habitacion '{id}' no existe." });
-            }
 
             return Ok(habitacion);
         }
