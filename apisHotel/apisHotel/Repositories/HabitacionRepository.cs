@@ -32,8 +32,16 @@ namespace apisHotel.Repositorys
 
         public void ActualizarHabitacion(Habitacion habitacion)
         {
-            var existingHabitacion = _dbContext.Habitaciones.Find(habitacion.Id);
-            _dbContext.Entry(existingHabitacion).CurrentValues.SetValues(habitacion);
+            var Habitacion = _dbContext.Habitaciones.Find(habitacion.Id);
+            _dbContext.Entry(Habitacion).CurrentValues.SetValues(habitacion);
+            _dbContext.SaveChanges();
+        }
+
+        public void ActualizarEstadoHabitacion(int id, bool estado)
+        {
+            var Habitacion = _dbContext.Habitaciones.FirstOrDefault(m => m.Id == id);
+            Habitacion.Habilitada = estado;
+
             _dbContext.SaveChanges();
         }
     }

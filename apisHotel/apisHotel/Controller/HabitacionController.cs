@@ -106,5 +106,28 @@ namespace apisHotel.Controller
 
             return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
         }
+
+        [HttpPut("ActualizarEstado/{id}")]
+        public async Task<IActionResult> ActualizarEstado(int id, [FromBody] bool estado)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+
+            if (Rol != "Agente")
+                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
+            var existeHabitacion = _habitacionService.ObtenerDetalleHabitacion(id);
+
+            if (existeHabitacion == null)
+                return NotFound(new { Message = $"La habitación '{id}' no existe." });
+
+            _habitacionService.ActualizarEstadoHabitacion(id, estado);
+
+            var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
+
+            return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
+        }
     }
 }

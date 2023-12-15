@@ -91,8 +91,8 @@ namespace apisHotel.Controller
             return Ok(new { Message = "Hotel modificado exitosamente.", Hotel = hotel });
         }
 
-        [HttpPut("ActualizarEstadoHotel/{id}")]
-        public async Task<IActionResult> ActualizarEstadoHotel(int id, [FromBody] bool estado)
+        [HttpPut("ActualizarEstado/{id}")]
+        public async Task<IActionResult> ActualizarEstado(int id, [FromBody] bool estado)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
