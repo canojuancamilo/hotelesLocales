@@ -41,5 +41,10 @@ namespace apisHotel.Services
         {
             return _hotelRepository.ObtenerDetalleHabitacion(id);
         }
+
+        public void ActualizarHabitacion(Habitacion habitacion)
+        {
+            _hotelRepository.ActualizarHabitacion(habitacion);
+        }
     }
 }

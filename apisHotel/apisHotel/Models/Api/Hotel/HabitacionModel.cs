@@ -18,8 +18,5 @@ namespace apisHotel.Models
 
         [Required(ErrorMessage = "Campo obligatorio")]
         public bool Habilitada { get; set; }
-
-        [Required(ErrorMessage = "Campo obligatorio")]
-        public int HotelId { get; set; }
     }
 }

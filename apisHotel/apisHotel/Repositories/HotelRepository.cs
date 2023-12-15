@@ -51,5 +51,12 @@ namespace apisHotel.Repositorys
         {
             return _dbContext.Habitaciones.FirstOrDefault(h => h.Id == id);
         }
+
+        public void ActualizarHabitacion(Habitacion habitacion)
+        {
+            var existingHabitacion = _dbContext.Habitaciones.Find(habitacion.Id);
+            _dbContext.Entry(existingHabitacion).CurrentValues.SetValues(habitacion);
+            _dbContext.SaveChanges();
+        }
     }
 }
