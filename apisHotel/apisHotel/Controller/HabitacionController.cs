@@ -104,7 +104,7 @@ namespace apisHotel.Controller
 
             _habitacionService.ActualizarHabitacion(habitacion);
 
-            return Ok(new { Message = "Habitacio modificada exitosamente.", Habitacion = habitacion });
+            return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
         }
     }
 }
