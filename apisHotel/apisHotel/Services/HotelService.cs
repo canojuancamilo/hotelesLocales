@@ -31,20 +31,5 @@ namespace apisHotel.Services
         {
             _hotelRepository.ActualizarHotel(hotel);
         }
-
-        public void AgregarHabitacionHotel(int HotelId, Habitacion habitacion)
-        {
-            _hotelRepository.AgregarHabitacionHotel(HotelId, habitacion);
-        }
-
-        public Habitacion ObtenerDetalleHabitacion(int id)
-        {
-            return _hotelRepository.ObtenerDetalleHabitacion(id);
-        }
-
-        public void ActualizarHabitacion(Habitacion habitacion)
-        {
-            _hotelRepository.ActualizarHabitacion(habitacion);
-        }
     }
 }

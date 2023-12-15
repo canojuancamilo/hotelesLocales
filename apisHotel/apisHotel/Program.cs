@@ -3,6 +3,7 @@ using apisHotel.Interfaces;
 using apisHotel.Models;
 using apisHotel.Repositorys;
 using apisHotel.Services;
+using apisHotel.Utilidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IHabitacionRepository, HabitacionRepository>();
+builder.Services.AddScoped<IHabitacionService, HabitacionService>();
+builder.Services.AddScoped<Usuario>();
 
 builder.Services.AddSwaggerGen(c =>
 {
