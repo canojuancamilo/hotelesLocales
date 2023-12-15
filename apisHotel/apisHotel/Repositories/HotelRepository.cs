@@ -30,32 +30,21 @@ namespace apisHotel.Repositorys
             _dbContext.SaveChanges();
         }
 
-        public void ActualizarHotel(Hotel hotel)
+        public void ActualizarHotel(Hotel model)
         {
-            _dbContext.Hoteles.Update(hotel);
+            var hotel = _dbContext.Hoteles.FirstOrDefault(m => m.Id == model.Id);
+            
+            hotel.Nombre = model.Nombre;
+            hotel.Habilitado = model.Habilitado;
+
             _dbContext.SaveChanges();
         }
 
-        public void AgregarHabitacionHotel(int hotelId, Habitacion habitacion)
+        public void ActualizarEstadoHotel(int id, bool estado)
         {
-            var hotel = _dbContext.Hoteles.FirstOrDefault(h => h.Id == hotelId);
+            var hotel = _dbContext.Hoteles.FirstOrDefault(m => m.Id == id);
+            hotel.Habilitado = estado;
 
-            if (hotel != null)
-            {
-                hotel.Habitaciones.Add(habitacion);
-                _dbContext.SaveChanges();
-            }
-        }
-
-        public Habitacion ObtenerDetalleHabitacion(int id)
-        {
-            return _dbContext.Habitaciones.FirstOrDefault(h => h.Id == id);
-        }
-
-        public void ActualizarHabitacion(Habitacion habitacion)
-        {
-            var existingHabitacion = _dbContext.Habitaciones.Find(habitacion.Id);
-            _dbContext.Entry(existingHabitacion).CurrentValues.SetValues(habitacion);
             _dbContext.SaveChanges();
         }
     }

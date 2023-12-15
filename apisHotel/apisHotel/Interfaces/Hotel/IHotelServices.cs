@@ -8,5 +8,6 @@ namespace apisHotel.Interfaces
         Hotel ObtenerDetalleHotel(int id);
         void AgregarHotel(Hotel hotel);
         void ActualizarHotel(Hotel hotel);
+        void ActualizarEstadoHotel(int id, bool estado);
     }
 }

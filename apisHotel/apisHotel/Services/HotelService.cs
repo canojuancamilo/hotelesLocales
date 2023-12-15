@@ -31,5 +31,10 @@ namespace apisHotel.Services
         {
             _hotelRepository.ActualizarHotel(hotel);
         }
+
+        public void ActualizarEstadoHotel(int id, bool estado)
+        {
+            _hotelRepository.ActualizarEstadoHotel(id, estado);
+        }
     }
 }
