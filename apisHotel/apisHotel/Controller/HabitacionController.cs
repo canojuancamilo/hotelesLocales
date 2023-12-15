@@ -54,7 +54,8 @@ namespace apisHotel.Controller
                 CostoBase = model.CostoBase,
                 Impuestos = model.Impuestos,
                 Ubicacion = model.Ubicacion,
-                Habilitada = model.Habilitada
+                Habilitada = model.Habilitada,
+                CantidadPersonas = model.CantidadPeronas
             };
 
             _habitacionService.AgregarHabitacionHotel(HotelId, habitacion);
@@ -99,7 +100,8 @@ namespace apisHotel.Controller
                 CostoBase = model.CostoBase,
                 Impuestos = model.Impuestos,
                 Ubicacion = model.Ubicacion,
-                Habilitada = model.Habilitada
+                Habilitada = model.Habilitada,
+                CantidadPersonas = model.CantidadPeronas
             };
 
             _habitacionService.ActualizarHabitacion(habitacion);

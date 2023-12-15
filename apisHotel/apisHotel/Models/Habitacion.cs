@@ -15,5 +15,7 @@ namespace apisHotel.Models
         public string Ubicacion { get; set; }
 
         public bool Habilitada { get; set; }
+
+        public int CantidadPersonas { get; set; }
     }
 }
