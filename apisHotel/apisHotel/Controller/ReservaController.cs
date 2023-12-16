@@ -30,6 +30,9 @@ namespace apisHotel.Controller
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Permite a los agentes obtener todas las reservas.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -50,6 +53,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes obtener el detalle de las reservas.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -73,6 +79,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los viajeros registrar las reservas.
+        /// </summary>
         [HttpPost("{IdHabitacion}")]
         public async Task<IActionResult> Post(int IdHabitacion, [FromBody] ReservaModel model)
         {
@@ -83,7 +92,7 @@ namespace apisHotel.Controller
 
                 var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
 
-                if (Rol != "Agente")
+                if (Rol == "Agente")
                     return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
                 DateTime fechaEntrada;

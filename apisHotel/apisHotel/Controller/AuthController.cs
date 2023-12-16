@@ -28,6 +28,9 @@ namespace apisHotel.Controller
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Obtiene todos los Roles, esto nos sirve al momento de registrar un cliente.
+        /// </summary>
         [HttpGet("Roles")]
         public async Task<IActionResult> Roles()
         {
@@ -48,6 +51,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Registra el cliente con el rol, para realizar validaciones de roles por medio del token en las demás Apis.
+        /// </summary>
         [HttpPost("RegistrarCliente")]
         public async Task<IActionResult> RegistrarCliente([FromBody] RegistroModel model)
         {
@@ -109,6 +115,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Obtiene el token Bearer de validación para las demás Apis.
+        /// </summary>
         [HttpPost("ObtenerToken")]
         public async Task<IActionResult> ObtenerToken([FromBody] LoginModel model)
         {

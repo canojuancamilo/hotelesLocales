@@ -28,6 +28,9 @@ namespace apisHotel.Controller
             _utilidadUsuario = utilidades;
         }
 
+        /// <summary>
+        /// Permite a los agentes registrar una habitación en un hotel.
+        /// </summary>
         [HttpPost("{IdHotel}")]
         public async Task<IActionResult> Post(int IdHotel, [FromBody] HabitacionModel model)
         {
@@ -67,6 +70,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes obtener el detalle de una habitación.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -90,6 +96,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes actualizar la información de una habitación.
+        /// </summary>
         [HttpPut("{idHabitacion}")]
         public async Task<IActionResult> Put(int idHabitacion, [FromBody] HabitacionModel model)
         {
@@ -131,6 +140,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes habilitar o inhabilitar una habitación
+        /// </summary>
         [HttpPut("ActualizarEstado/{id}")]
         public async Task<IActionResult> ActualizarEstado(int id, [FromBody] bool estado)
         {

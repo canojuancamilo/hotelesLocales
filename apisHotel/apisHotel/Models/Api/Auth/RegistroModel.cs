@@ -19,9 +19,14 @@ namespace apisHotel.Models.Api
         public string Email { get; set; }
 
         public string TelefonoContacto { get; set; }
+
         public string Genero { get; set; }
+
         public string TipoDocumento { get; set; }
 
+        /// <summary>
+        /// Nombre del rol (name) en /api/Auth/Roles.
+        /// </summary>
         [Required(ErrorMessage = "Campo obligatorio")]
         public string Rol { get; set; }
 

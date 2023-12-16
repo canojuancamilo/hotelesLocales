@@ -27,6 +27,9 @@ namespace apisHotel.Controller
             _utilidadUsuario = utilidades;
         }
 
+        /// <summary>
+        /// Permite a los agentes registrar un hotel.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] HotelModel model)
         {
@@ -55,6 +58,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes obtener todos los hoteles registrados.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -74,7 +80,9 @@ namespace apisHotel.Controller
             }
         }
 
-
+        /// <summary>
+        /// Permite a los agentes actualizar la información de un hotel.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] HotelModel model)
         {
@@ -112,6 +120,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los agentes habilitar o inhabilitar un hotel
+        /// </summary>
         [HttpPut("ActualizarEstado/{id}")]
         public async Task<IActionResult> ActualizarEstado(int id, [FromBody] bool estado)
         {
@@ -144,6 +155,9 @@ namespace apisHotel.Controller
             }
         }
 
+        /// <summary>
+        /// Permite a los viajeros obtener los hoteles con habitaciones disponibles.
+        /// </summary>
         [HttpGet("Disponibles/{FechaEntrada}/{FechaSalida}/{CantidadPersonas}/{Ciudad}")]
         public async Task<IActionResult> ObenerHotelesDisponibles(string FechaEntrada, string FechaSalida, int CantidadPersonas, string Ciudad)
         {
