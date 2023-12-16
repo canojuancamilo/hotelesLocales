@@ -31,106 +31,134 @@ namespace apisHotel.Controller
         [HttpPost("{IdHotel}")]
         public async Task<IActionResult> Post(int IdHotel, [FromBody] HabitacionModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
-
-            if (Rol != "Agente")
-                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
-
-            bool hotelExiste = _hotelService.ObtenerDetalleHotel(IdHotel) != null;
-
-            if (!hotelExiste)
+            try
             {
-                return NotFound(new { Message = $"El hotel '{IdHotel}' no existe." });
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+
+                if (Rol != "Agente")
+                    return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
+                bool hotelExiste = _hotelService.ObtenerDetalleHotel(IdHotel) != null;
+
+                if (!hotelExiste)
+                {
+                    return NotFound(new { Message = $"El hotel '{IdHotel}' no existe." });
+                }
+
+                Habitacion habitacion = new Habitacion()
+                {
+                    Tipo = model.Tipo,
+                    CostoBase = model.CostoBase,
+                    Impuestos = model.Impuestos,
+                    Ubicacion = model.Ubicacion,
+                    Habilitada = model.Habilitada,
+                    CantidadPersonas = model.CantidadPeronas
+                };
+
+                _habitacionService.AgregarHabitacionHotel(IdHotel, habitacion);
+                return CreatedAtAction(nameof(Get), new { id = habitacion.Id }, habitacion);
             }
-
-            Habitacion habitacion = new Habitacion()
+            catch (Exception ex)
             {
-                Tipo = model.Tipo,
-                CostoBase = model.CostoBase,
-                Impuestos = model.Impuestos,
-                Ubicacion = model.Ubicacion,
-                Habilitada = model.Habilitada,
-                CantidadPersonas = model.CantidadPeronas
-            };
-
-            _habitacionService.AgregarHabitacionHotel(IdHotel, habitacion);
-            return CreatedAtAction(nameof(Get), new { id = habitacion.Id }, habitacion);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+            try
+            {
+                var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
 
-            if (Rol != "Agente")
-                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+                if (Rol != "Agente")
+                    return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
-            var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
+                var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
 
-            if (habitacion == null)
-                return NotFound(new { Message = $"La habitacion '{id}' no existe." });
+                if (habitacion == null)
+                    return NotFound(new { Message = $"La habitacion '{id}' no existe." });
 
-            return Ok(habitacion);
+                return Ok(habitacion);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{idHabitacion}")]
         public async Task<IActionResult> Put(int idHabitacion, [FromBody] HabitacionModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
-
-            if (Rol != "Agente")
-                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
-
-            var existeHabitacion = _habitacionService.ObtenerDetalleHabitacion(idHabitacion);
-
-            if (existeHabitacion == null)
+            try
             {
-                return NotFound(new { Message = $"La habitacion '{idHabitacion}' no existe." });
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+
+                if (Rol != "Agente")
+                    return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+
+                var existeHabitacion = _habitacionService.ObtenerDetalleHabitacion(idHabitacion);
+
+                if (existeHabitacion == null)
+                {
+                    return NotFound(new { Message = $"La habitacion '{idHabitacion}' no existe." });
+                }
+
+                Habitacion habitacion = new Habitacion()
+                {
+                    Id = idHabitacion,
+                    Tipo = model.Tipo,
+                    CostoBase = model.CostoBase,
+                    Impuestos = model.Impuestos,
+                    Ubicacion = model.Ubicacion,
+                    Habilitada = model.Habilitada,
+                    CantidadPersonas = model.CantidadPeronas
+                };
+
+                _habitacionService.ActualizarHabitacion(habitacion);
+
+                return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
             }
-
-            Habitacion habitacion = new Habitacion()
+            catch (Exception ex)
             {
-                Id = idHabitacion,
-                Tipo = model.Tipo,
-                CostoBase = model.CostoBase,
-                Impuestos = model.Impuestos,
-                Ubicacion = model.Ubicacion,
-                Habilitada = model.Habilitada,
-                CantidadPersonas = model.CantidadPeronas
-            };
-
-            _habitacionService.ActualizarHabitacion(habitacion);
-
-            return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("ActualizarEstado/{id}")]
         public async Task<IActionResult> ActualizarEstado(int id, [FromBody] bool estado)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
+                var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
 
-            if (Rol != "Agente")
-                return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
+                if (Rol != "Agente")
+                    return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
-            var existeHabitacion = _habitacionService.ObtenerDetalleHabitacion(id);
+                var existeHabitacion = _habitacionService.ObtenerDetalleHabitacion(id);
 
-            if (existeHabitacion == null)
-                return NotFound(new { Message = $"La habitación '{id}' no existe." });
+                if (existeHabitacion == null)
+                    return NotFound(new { Message = $"La habitación '{id}' no existe." });
 
-            _habitacionService.ActualizarEstadoHabitacion(id, estado);
+                _habitacionService.ActualizarEstadoHabitacion(id, estado);
 
-            var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
+                var habitacion = _habitacionService.ObtenerDetalleHabitacion(id);
 
-            return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
+                return Ok(new { Message = "Habitación modificada exitosamente.", Habitacion = habitacion });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
