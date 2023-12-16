@@ -4,6 +4,7 @@ using apisHotel.Models.Api;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -62,6 +63,11 @@ namespace apisHotel.Controller
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
+                DateTime fechaNacimiento;
+
+                if (!(DateTime.TryParseExact(model.FechaNacimiento, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaNacimiento)))
+                    return BadRequest("Formato de fecha de entrada no válido. Utiliza el formato dd-MM-yyyy.");
+
                 if (await _userManager.FindByEmailAsync(model.Email) != null)
                 {
                     ModelState.AddModelError("Email", $"El correo '{model.Email}' ya se encuentra registrado.");
@@ -80,7 +86,7 @@ namespace apisHotel.Controller
                 {
                     Nombres = model.Nombres,
                     Apellidos = model.Apellidos,
-                    FechaNacimiento = model.FechaNacimiento,
+                    FechaNacimiento = fechaNacimiento,
                     NumeroDocumento = model.NumeroDocumento,
                     Email = model.Email,
                     TelefonoContacto = model.TelefonoContacto,

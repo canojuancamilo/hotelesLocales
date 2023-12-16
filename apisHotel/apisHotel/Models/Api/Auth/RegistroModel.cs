@@ -10,7 +10,7 @@ namespace apisHotel.Models.Api
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "Campo obligatorio")]
-        public DateTime FechaNacimiento { get; set; }
+        public string FechaNacimiento { get; set; }
 
         public string NumeroDocumento { get; set; }
 
