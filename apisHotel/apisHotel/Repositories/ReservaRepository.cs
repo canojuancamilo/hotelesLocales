@@ -1,7 +1,5 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace apisHotel.Repositorys
 {
@@ -24,9 +22,9 @@ namespace apisHotel.Repositorys
             return _dbContext.Reservas.FirstOrDefault(m => m.Id == id);
         }
 
-        public void AgregarReservaHabitacion(Reserva reserva)
+        public void AgregarReservaHabitacion(Reserva model)
         {
-            _dbContext.Reservas.Add(reserva);
+            _dbContext.Reservas.Add(model);
             _dbContext.SaveChanges();
         }
     }

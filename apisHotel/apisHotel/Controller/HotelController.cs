@@ -1,7 +1,6 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
 using apisHotel.Models.Api;
-using apisHotel.Services;
 using apisHotel.Utilidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -122,7 +121,7 @@ namespace apisHotel.Controller
         {
             var Rol = await _utilidadUsuario.ObtenerRolAsync(User);
 
-            if (Rol != "Agente")
+            if (Rol != "Viajero")
                 return Unauthorized(new { Mensaje = $"El rol '{Rol}' no puede acceder a esta información." });
 
             DateTime fechaEntrada;

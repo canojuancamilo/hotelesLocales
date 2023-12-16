@@ -1,7 +1,5 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
-using apisHotel.Models.Api;
-using apisHotel.Services;
 using apisHotel.Utilidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

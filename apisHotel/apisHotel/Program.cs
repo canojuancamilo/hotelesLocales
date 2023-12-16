@@ -1,6 +1,7 @@
 using apisHotel;
 using apisHotel.Interfaces;
 using apisHotel.Models;
+using apisHotel.Models.Api.Correo;
 using apisHotel.Repositorys;
 using apisHotel.Services;
 using apisHotel.Utilidades;
@@ -10,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +25,8 @@ builder.Services.AddScoped<IHabitacionRepository, HabitacionRepository>();
 builder.Services.AddScoped<IHabitacionService, HabitacionService>();
 builder.Services.AddScoped<IReservaRepository, ReservaRepository>();
 builder.Services.AddScoped<IReservaService, ReservaService>();
+builder.Services.Configure<ConfiguracionEmail>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<Usuario>();
 
 builder.Services.AddSwaggerGen(c =>

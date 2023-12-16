@@ -1,7 +1,6 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace apisHotel.Repositorys
 {

@@ -1,6 +1,5 @@
 ﻿using apisHotel.Interfaces;
 using apisHotel.Models;
-using apisHotel.Repositorys;
 
 namespace apisHotel.Services
 {
